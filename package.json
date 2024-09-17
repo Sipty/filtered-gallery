@@ -17,7 +17,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
@@ -41,9 +43,5 @@
     "gh-pages": "^6.1.1",
     "tailwindcss": "^3.4.11"
   },
-  "homepage": "https://sipty.github.io/filtered-gallery",
-  "scripts": {
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
-  }
+  "homepage": "https://sipty.github.io/filtered-gallery"
 }
