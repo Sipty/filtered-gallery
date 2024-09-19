@@ -89,18 +89,18 @@ const FilterComponent = ({ onFilterChange, initialFilters }) => {
           <input
             type="range"
             min="0"
-            max="10"
+            max="5"
             value={bedroomRange[1]}
             onChange={handleBedroomChange}
             className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
           />
           <div className="flex justify-between text-xs text-gray-600">
             <span>0</span>
+            <span>1</span>
             <span>2</span>
+            <span>3</span>
             <span>4</span>
-            <span>6</span>
-            <span>8</span>
-            <span>10+</span>
+            <span>5+</span>
           </div>
         </div>
 

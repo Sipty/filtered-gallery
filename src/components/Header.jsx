@@ -1,11 +1,9 @@
 import React from 'react';
-import { DoorOpen } from 'lucide-react';
 
 const Header = () => {
   return (
     <nav className="flex items-center justify-between px-4 py-2 bg-white shadow-md">
       <div className="flex items-center">
-        <DoorOpen className="w-8 h-8 mr-2 text-blue-600" />
         <span className="text-xl font-bold">homways</span>
       </div>
       <div className="flex items-center space-x-4">

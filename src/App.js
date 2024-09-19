@@ -8,7 +8,7 @@ import { properties } from './data/propertyData';
 function App() {
   const [filters, setFilters] = useState({
     priceRange: [0, 1000000],
-    bedroomRange: [0, 10],
+    bedroomRange: [0, 5],
     showUnlisted: true,
     wash_dry: false,
     parking: false,
@@ -55,7 +55,7 @@ function App() {
   });
 
   return (
-    <div className="bg-gray-100 h-screen flex flex-col">
+    <div className="bg-gray-100 h-screen flex flex-col font-['Outfit']">
       <Header />
       <div className="flex flex-1 overflow-hidden">
         <aside className="w-1/4 overflow-y-scroll p-4 bg-white shadow-md">
