@@ -8,7 +8,7 @@ import { properties } from './data/propertyData';
 function App() {
   const [filters, setFilters] = useState({
     priceRange: [0, 1000000],
-    bedroomRange: [0, 5],
+    bedroomFilter: 0,
     showUnlisted: true,
     wash_dry: false,
     parking: false,
@@ -40,12 +40,11 @@ function App() {
       return maxPrice >= filters.priceRange[0] && minPrice <= filters.priceRange[1];
     })();
 
-    const bedroomMatch = 
-      property.min_bedrooms <= filters.bedroomRange[1] && 
-      property.max_bedrooms >= filters.bedroomRange[0];
+    // Updated bedroom matching logic
+    const bedroomMatch = property.max_bedrooms >= filters.bedroomFilter;
 
     const amenityMatch = Object.keys(filters).every(key => {
-      if (['priceRange', 'bedroomRange', 'showUnlisted'].includes(key)) {
+      if (['priceRange', 'bedroomFilter', 'showUnlisted'].includes(key)) {
         return true;
       }
       return !filters[key] || property[key];

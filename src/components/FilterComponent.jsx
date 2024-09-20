@@ -5,7 +5,7 @@ import "react-datepicker/dist/react-datepicker.css";
 
 const FilterComponent = ({ onFilterChange, initialFilters }) => {
   const [priceRange, setPriceRange] = useState(initialFilters.priceRange);
-  const [bedroomRange, setBedroomRange] = useState(initialFilters.bedroomRange);
+  const [bedroomFilter, setBedroomFilter] = useState(initialFilters.bedroomFilter);
   const [showUnlisted, setShowUnlisted] = useState(initialFilters.showUnlisted);
   const [moveInDate, setMoveInDate] = useState(null);
   const [amenities, setAmenities] = useState({
@@ -21,8 +21,8 @@ const FilterComponent = ({ onFilterChange, initialFilters }) => {
   });
 
   useEffect(() => {
-    onFilterChange({ priceRange, bedroomRange, showUnlisted, ...amenities });
-  }, [priceRange, bedroomRange, showUnlisted, amenities, onFilterChange]);
+    onFilterChange({ priceRange, bedroomFilter, showUnlisted, ...amenities });
+  }, [priceRange, bedroomFilter, showUnlisted, amenities, onFilterChange]);
 
   const handlePriceChange = (index, value) => {
     const newPriceRange = [...priceRange];
@@ -32,7 +32,7 @@ const FilterComponent = ({ onFilterChange, initialFilters }) => {
 
   const handleBedroomChange = (e) => {
     const value = parseInt(e.target.value);
-    setBedroomRange([0, value]);
+    setBedroomFilter(value);
   };
 
   const handleAmenityChange = (amenity) => {
@@ -84,13 +84,13 @@ const FilterComponent = ({ onFilterChange, initialFilters }) => {
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Bedrooms: Up to {bedroomRange[1]}
+            Bedrooms: {bedroomFilter}+
           </label>
           <input
             type="range"
             min="0"
             max="5"
-            value={bedroomRange[1]}
+            value={bedroomFilter}
             onChange={handleBedroomChange}
             className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
           />
