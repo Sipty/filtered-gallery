@@ -1,7 +1,9 @@
 import React from 'react';
 import { Droplet, Car, Utensils, Waves, Dumbbell, Briefcase, Package, Users, Dog } from 'lucide-react';
 
-const PropertyCard = ({ imageUrl, title, min_bedrooms, max_bedrooms, address, price, wash_dry, parking, dishwasher, pool, fitness, cowork, package: packageService, community_space, pets }) => {
+const PropertyCard = ({ property, onCardClick }) => {
+  const { imageUrl, title, min_bedrooms, max_bedrooms, address, price, wash_dry, parking, dishwasher, pool, fitness, cowork, package: packageService, community_space, pets } = property;
+
   const getBedroomText = () => {
     if (min_bedrooms === max_bedrooms) {
       return `${min_bedrooms} ${min_bedrooms === 1 ? 'bedroom' : 'bedrooms'}`;
@@ -23,7 +25,10 @@ const PropertyCard = ({ imageUrl, title, min_bedrooms, max_bedrooms, address, pr
   ];
 
   return (
-    <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
+    <div 
+      className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden cursor-pointer"
+      onClick={() => onCardClick(property)}
+    >
       <div className="relative pb-[60%]">
         <img
           src={imageUrl}

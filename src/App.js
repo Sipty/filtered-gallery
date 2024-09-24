@@ -40,7 +40,6 @@ function App() {
       return maxPrice >= filters.priceRange[0] && minPrice <= filters.priceRange[1];
     })();
 
-    // Updated bedroom matching logic
     const bedroomMatch = property.max_bedrooms >= filters.bedroomFilter;
 
     const amenityMatch = Object.keys(filters).every(key => {
@@ -54,13 +53,13 @@ function App() {
   });
 
   return (
-    <div className="bg-gray-100 h-screen flex flex-col font-['Outfit']">
+    <div className="bg-gray-100 min-h-screen flex flex-col font-['Outfit']">
       <Header />
       <div className="flex flex-1 overflow-hidden">
-        <aside className="w-1/4 overflow-y-scroll p-4 bg-white shadow-md">
+        <aside className="w-1/4 overflow-y-auto p-4 bg-white shadow-md">
           <FilterComponent onFilterChange={handleFilterChange} initialFilters={filters} />
         </aside>
-        <main className="w-3/4 overflow-y-scroll p-8">
+        <main className="w-3/4 overflow-y-auto p-8">
           <h1 className="text-3xl font-bold mb-8">Featured Properties</h1>
           <ImageGallery properties={filteredProperties} />
         </main>
