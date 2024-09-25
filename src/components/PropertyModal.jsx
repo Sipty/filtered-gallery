@@ -127,8 +127,7 @@ const PropertyModal = ({ property, onClose }) => {
             </div>
 
             <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
-              <h3 className="text-2xl font-bold mb-4">{selectedBedroom} Bedroom Details</h3>
-              <p className="text-green-600 font-semibold text-xl mb-4">{getBedroomPrice(selectedBedroom)}</p>
+              <p className="text-green-600 font-semibold text-2xl mb-6">{getBedroomPrice(selectedBedroom)}</p>
               <h4 className="text-lg font-semibold mb-2">Amenities:</h4>
               {renderAmenityList()}
             </div>
