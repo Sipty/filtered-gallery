@@ -75,7 +75,7 @@ const PropertyModal = ({ property, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-end">
-      <div ref={modalRef} className="bg-white w-full sm:w-2/3 md:w-3/4 lg:w-4/5 h-full flex flex-col animate-slide-in">
+      <div ref={modalRef} className="bg-white w-full sm:w-3/4 md:w-2/3 lg:w-7/12 h-full flex flex-col animate-slide-in">
         <div className="flex-grow overflow-y-auto">
           <div className="relative h-1/3 min-h-[200px] shadow-md">
             <img
