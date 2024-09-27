@@ -1,24 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { X, Droplet, Car, Utensils, Waves, Dumbbell, Briefcase, Package, Users, Dog, Phone, ChevronLeft, ChevronRight } from 'lucide-react';
+import FloorPlan from './FloorPlan';
 
 const PropertyModal = ({ property, onClose }) => {
   const modalRef = useRef(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [selectedBedroom, setSelectedBedroom] = useState(property.min_bedrooms);
-
+  const [selectedBedroom, setSelectedBedroom] = useState('All');
   const images = [property.imageUrl, ...(property.additionalImages || [])];
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
-
     const handleOutsideClick = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
         onClose();
       }
     };
-
     document.addEventListener('mousedown', handleOutsideClick);
-
     return () => {
       document.body.style.overflow = 'unset';
       document.removeEventListener('mousedown', handleOutsideClick);
@@ -51,14 +48,14 @@ const PropertyModal = ({ property, onClose }) => {
     { name: 'Pet-friendly', icon: Dog, value: property.pets },
   ];
 
-  const bedroomSizes = Array.from({ length: property.max_bedrooms - property.min_bedrooms + 1 }, (_, i) => property.min_bedrooms + i);
+  const bedroomSizes = ['All', ...Array.from({ length: property.max_bedrooms - property.min_bedrooms + 1 }, (_, i) => property.min_bedrooms + i)];
 
   const renderAmenityList = () => (
-    <ul className="list-none p-0 grid grid-cols-2 gap-4">
+    <ul className="list-none p-0 grid grid-cols-2 gap-2">
       {amenities.map(({ name, icon: Icon, value }) => value && (
-        <li key={name} className="flex items-center mb-2">
-          <Icon size={20} className="mr-2 text-blue-500" />
-          <span>{name}</span>
+        <li key={name} className="flex items-center mb-1">
+          <Icon size={16} className="mr-1 text-blue-500" />
+          <span className="text-sm">{name}</span>
         </li>
       ))}
     </ul>
@@ -69,18 +66,45 @@ const PropertyModal = ({ property, onClose }) => {
   };
 
   const getBedroomPrice = (bedroomCount) => {
-    const specificPrice = property[`price_bed_${bedroomCount}`];
-    return specificPrice || property.price;
+    if (bedroomCount === 'All') {
+      const prices = bedroomSizes
+        .filter(size => size !== 'All')
+        .map(size => property[`price_bed_${size}`])
+        .filter(price => price) // Filter out undefined prices
+        .map(price => parseFloat(price.replace(/[^0-9.-]+/g, "")));
+      
+      if (prices.length === 0) return 'Price not available';
+      
+      const minPrice = Math.min(...prices);
+      const maxPrice = Math.max(...prices);
+      
+      return `$${minPrice.toFixed(0)} - $${maxPrice.toFixed(0)}`;
+    } else {
+      const specificPrice = property[`price_bed_${bedroomCount}`];
+      if (!specificPrice) return 'Price not available';
+      
+      const prices = property[`units_bed_${bedroomCount}`]
+        .map(unit => parseFloat(unit.price.replace(/[^0-9.-]+/g, "")));
+      
+      const minPrice = Math.min(...prices);
+      const maxPrice = Math.max(...prices);
+      
+      if (minPrice === maxPrice) {
+        return `$${minPrice.toFixed(0)}`;
+      } else {
+        return `$${minPrice.toFixed(0)} - $${maxPrice.toFixed(0)}`;
+      }
+    }
   };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-end">
       <div ref={modalRef} className="bg-white w-full sm:w-3/4 md:w-2/3 lg:w-7/12 h-full flex flex-col animate-slide-in">
         <div className="flex-grow overflow-y-auto">
-          <div className="relative h-1/3 min-h-[200px] shadow-md">
+          <div className="relative h-3/5 min-h-[240px] shadow-md">
             <img
               src={images[currentImageIndex]}
-              alt={`${property.title} - Image ${currentImageIndex + 1}`}
+              alt={`${property.title} - ${currentImageIndex + 1}`}
               className="w-full h-full object-cover shadow-lg"
             />
             {images.length > 1 && (
@@ -106,39 +130,44 @@ const PropertyModal = ({ property, onClose }) => {
               <X size={24} />
             </button>
           </div>
-          <div className="p-6">
-            <h2 className="text-3xl font-bold mb-2">{property.title}</h2>
-            <p className="text-gray-600 mb-4 text-lg">{property.address}</p>
+          <div className="p-4">
+            <h2 className="text-2xl font-bold mb-1">{property.title}</h2>
+            <p className="text-gray-600 mb-3 text-sm">{property.address}</p>
             
-            <div className="mb-6">
-              <div className="flex border-b border-gray-300">
+            <div className="mb-2">
+              <div className="flex flex-wrap border-b border-gray-300">
                 {bedroomSizes.map(size => (
                   <button
                     key={size}
                     onClick={() => handleBedroomClick(size)}
-                    className={`flex-1 px-4 py-2 text-center font-semibold ${
+                    className={`flex-1 px-3 py-1 text-center font-semibold text-sm ${
                       selectedBedroom === size ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     }`}
                   >
-                    {size} Bedroom
+                    {size === 'All' ? 'All' : `${size} Bed`}
                   </button>
                 ))}
               </div>
             </div>
 
-            <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
-              <p className="text-green-600 font-semibold text-2xl mb-6">{getBedroomPrice(selectedBedroom)}</p>
-              <h4 className="text-lg font-semibold mb-2">Amenities:</h4>
-              {renderAmenityList()}
+            <div className="bg-gray-50 p-4 rounded-lg shadow-sm">
+            <p className="text-green-600 font-semibold text-xl mb-2">{getBedroomPrice(selectedBedroom)}</p>
+              <div className="flex flex-col space-y-2">
+              <div>
+                <h4 className="text-sm font-semibold mb-1">Amenities:</h4>
+                {renderAmenityList()}
+              </div>
+              <FloorPlan property={property} selectedBedroom={selectedBedroom} />
+            </div>
             </div>
           </div>
         </div>
-        <div className="p-4 border-t border-gray-200 bg-white flex sticky bottom-0 z-10 shadow-md">
-          <button className="flex-1 bg-gray-200 text-gray-700 py-2 px-4 rounded-lg mr-2 flex items-center justify-center transition-all duration-300 ease-in-out hover:bg-gradient-to-r hover:from-gray-300 hover:via-gray-200 hover:to-gray-300">
+        <div className="p-3 border-t border-gray-200 bg-white flex sticky bottom-0 z-10 shadow-md">
+          <button className="flex-1 bg-gray-200 text-gray-700 py-2 px-3 rounded-lg mr-2 flex items-center justify-center transition-all duration-300 ease-in-out hover:bg-gradient-to-r hover:from-gray-300 hover:via-gray-200 hover:to-gray-300 text-sm">
             Enquire further
-            <Phone size={20} className="ml-2" />
+            <Phone size={16} className="ml-1" />
           </button>
-          <button className="flex-[3] bg-green-500 text-white py-2 px-4 rounded-lg font-bold transition-all duration-300 ease-in-out hover:bg-gradient-to-r hover:from-green-600 hover:via-green-500 hover:to-green-600">
+          <button className="flex-[3] bg-green-500 text-white py-2 px-3 rounded-lg font-bold transition-all duration-300 ease-in-out hover:bg-gradient-to-r hover:from-green-600 hover:via-green-500 hover:to-green-600 text-sm">
             APPLY NOW!
           </button>
         </div>
